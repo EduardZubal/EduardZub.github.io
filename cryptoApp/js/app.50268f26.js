@@ -10,10 +10,18 @@
 var classCallCheck = __webpack_require__(3029);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createClass.js + 3 modules
 var createClass = __webpack_require__(2212);
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js + 5 modules
+var toConsumableArray = __webpack_require__(4506);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
+var es_array_concat = __webpack_require__(8706);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.join.js
+var es_array_join = __webpack_require__(8598);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.to-fixed.js
 var es_number_to_fixed = __webpack_require__(9868);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.to-string.js
 var es_object_to_string = __webpack_require__(6099);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.regexp.to-string.js
+var es_regexp_to_string = __webpack_require__(8781);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
 var web_dom_collections_for_each = __webpack_require__(3500);
 ;// ./src/assets/scripts/index.js
@@ -24,6 +32,21 @@ var web_dom_collections_for_each = __webpack_require__(3500);
 
 
 
+
+
+
+
+function splitNumberByDigits(value) {
+  if (!value) {
+    return '0.00000';
+  }
+  if (isNaN(value)) {
+    return '0.00000';
+  }
+  return (value || 0).toString().split('').reverse().reduce(function (memo, x, i) {
+    return (i + 1) % 3 === 0 && x !== '.' ? [].concat((0,toConsumableArray/* default */.A)(memo), [x, ' ']) : [].concat((0,toConsumableArray/* default */.A)(memo), [x]);
+  }, []).reverse().join('');
+}
 var СonvertingService = /*#__PURE__*/function () {
   function СonvertingService() {
     (0,classCallCheck/* default */.A)(this, СonvertingService);
@@ -43,12 +66,16 @@ var СonvertingService = /*#__PURE__*/function () {
   }, {
     key: "cryptoToUsd",
     value: function cryptoToUsd(sum, rate, sumContainer) {
-      sumContainer.textContent = "$ ".concat((+sum.value * +rate.value).toFixed(5));
+      if (+sum.value && +rate.value) {
+        sumContainer.textContent = "$ ".concat(splitNumberByDigits((+sum.value * +rate.value).toFixed(5)));
+      }
     }
   }, {
     key: "usdToCrypto",
     value: function usdToCrypto(sum, rate, sumContainer) {
-      sumContainer.textContent = "".concat((+sum.value / +rate.value).toFixed(5));
+      if (+sum.value && +rate.value) {
+        sumContainer.textContent = "".concat(splitNumberByDigits((+sum.value / +rate.value).toFixed(5)));
+      }
     }
   }]);
 }();
